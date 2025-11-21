@@ -1,4 +1,4 @@
-# Capital - The Ultimate Property Trading Game
+# Capital (Prototype)
 
 A modern, dynamic Monopoly-style board game with multi-directional movement, banks, stores, and strategic gameplay.
 
