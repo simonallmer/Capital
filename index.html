@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital - The Ultimate Property Trading Game</title>
+    <meta name="description"
+        content="Capital is a dynamic Monopoly-style board game with multi-directional movement, banks, stores, and strategic gameplay. Play 2-4 players locally!">
+    <meta name="keywords" content="board game, monopoly, property trading, strategy game, web game, multiplayer">
+    <meta name="author" content="Capital Game">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Capital - The Ultimate Property Trading Game">
+    <meta property="og:description"
+        content="A modern Monopoly-style game with multi-directional movement, banks, stores, and strategic gameplay.">
+    <meta property="og:image" content="./favicon.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <link rel="apple-touch-icon" href="./favicon.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation"></div>
+
+    <!-- Setup Screen -->
+    <div id="setup-overlay" class="setup-overlay">
+        <div class="setup-container">
+            <div class="logo-container">
+                <h1 class="game-title">Capital</h1>
+                <p class="game-subtitle">The Ultimate Property Trading Game</p>
+            </div>
+
+            <div class="setup-content">
+                <h2 class="setup-heading">Start Your Journey</h2>
+                <p class="setup-description">Choose the number of players for local hotseat mode. All players start at
+                    the City Center.</p>
+
+                <div class="player-selection">
+                    <button onclick="startGame(2)" class="player-btn" data-players="2">
+                        <span class="player-count">2</span>
+                        <span class="player-label">Players</span>
+                    </button>
+                    <button onclick="startGame(3)" class="player-btn" data-players="3">
+                        <span class="player-count">3</span>
+                        <span class="player-label">Players</span>
+                    </button>
+                    <button onclick="startGame(4)" class="player-btn" data-players="4">
+                        <span class="player-count">4</span>
+                        <span class="player-label">Players</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game UI -->
+    <div id="game-container" class="game-container hidden">
+        <header class="game-header">
+            <h1 class="header-title">Capital</h1>
+            <div class="header-info">
+                <span class="game-mode">Local Hotseat Mode</span>
+            </div>
+        </header>
+
+        <div class="game-layout">
+            <!-- Main Game Area -->
+            <div class="main-area">
+                <!-- Controls Panel -->
+                <div class="controls-panel">
+                    <div id="turn-indicator" class="turn-indicator"></div>
+
+                    <div class="move-controls">
+                        <div class="direction-selector">
+                            <label class="control-label">Choose Direction:</label>
+                            <div id="directional-controls" class="directional-grid"></div>
+                        </div>
+
+                        <div class="action-buttons-row">
+                            <button id="roll-move-btn" onclick="rollAndMove()" class="btn btn-primary" disabled>
+                                <span class="btn-icon">🎲</span>
+                                <span>Roll & Move</span>
+                            </button>
+                            <button id="dice-modifier-btn" onclick="toggleDiceModifier()"
+                                class="btn btn-modifier hidden" disabled>
+                                <span class="btn-icon">✨</span>
+                                <span>Use Dice Mod</span>
+                            </button>
+                        </div>
+                        <div id="last-roll" class="last-roll-display"></div>
+                    </div>
+
+                    <div class="property-actions">
+                        <button id="buy-property-btn" onclick="buyProperty()" class="btn btn-success" disabled>
+                            <span class="btn-icon">🏠</span>
+                            <span>Buy/Enhance</span>
+                        </button>
+                        <button id="special-action-btn" onclick="handleSpecialAction()" class="btn btn-special hidden">
+                            <span class="btn-icon">⚡</span>
+                            <span>Special Action</span>
+                        </button>
+                        <button id="trade-btn" onclick="window.initiateTrade()" class="btn btn-info hidden">
+                            <span class="btn-icon">🤝</span>
+                            <span>Trade</span>
+                        </button>
+                        <button id="next-turn-btn" onclick="nextTurn()" class="btn btn-secondary" disabled>
+                            <span class="btn-icon">➡️</span>
+                            <span>Next Turn</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Board -->
+                <div class="board-container">
+                    <div id="board" class="game-board"></div>
+                </div>
+
+                <!-- Player Cards -->
+                <div id="player-cards-container" class="player-cards"></div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h2 class="sidebar-title">Bank Status</h2>
+                    <div class="bank-info">
+                        <div class="bank-amount">
+                            <span class="currency">$</span>
+                            <span id="bank-money">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h2 class="sidebar-title">Game Log</h2>
+                    <div id="game-log" class="game-log"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Generic Modal -->
+    <div id="generic-modal" class="modal-backdrop hidden">
+        <div class="modal-container">
+            <div class="modal-content">
+                <h3 id="modal-title" class="modal-title">Title</h3>
+                <p id="modal-message" class="modal-message">Message.</p>
+                <div id="modal-custom-content" class="modal-custom hidden"></div>
+                <div id="modal-input-container" class="modal-input-container hidden">
+                    <input type="number" id="modal-input" class="modal-input" placeholder="Enter amount">
+                </div>
+                <div id="modal-button-container" class="modal-buttons">
+                    <button id="modal-cancel-btn" onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                    <button id="modal-confirm-btn" onclick="closeModal()"
+                        class="btn btn-primary hidden">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+
+</html>
